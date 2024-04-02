@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scribble It</title> 
+
+    <style>
+        body {
+            background-color: #f2f2f2;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        nav {
+            background-color: #333;
+            padding: 20px 50px;
+            text-align: right;
+        }
+        nav ul {
+            list-style-type: none; 
+            margin: 0;
+            padding: 0; 
+        }
+        nav ul li {
+            display: inline-block; 
+            margin-right: 20px; 
+        }
+        nav ul li a {
+            text-decoration: none; 
+            color: #fff; 
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 30px;
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start; 
+            flex-wrap: wrap;
+        }
+        .contact-info {
+            order: -1;
+            color: #fff;
+            text-align: center;
+        }
+        .social-links a {
+            margin-right: 10px;
+            color: #fff;
+        }
+        .copyright {
+            color: #fff;
+        }
+        .copyright p {
+            margin: 0;
+        }
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #codePrompt {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        #userResponse {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        #userResponse textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+        #userResponse button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+        #userResponse button:hover {
+            background-color: #0056b3;
+        }
+        header {
+            position: relative;
+            border: 25px solid #ccc; 
+            background-color: #ccc;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); 
+        }
+        .mountain-container {
+            position: relative;
+            width: 100%;
+            min-height: 300px; 
+            background-image: url("pic-journal/mountain.jpeg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover; 
+            background-attachment: fixed; 
+        }
+        .mountain {
+            display: block;
+            width: 100%;
+            height: 100%;
+            opacity: 0.5; 
+        }
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5); 
+            overflow: auto; 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%; 
+            border-radius: 5px;
+            position: relative;
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            color: #888;
+            cursor: pointer;
+        }
+        #loginForm {
+            margin-top: 20px;
+        }
+        #loginForm label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        #loginForm input[type="text"],
+        #loginForm input[type="password"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px;
+        }
+        #loginForm button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #loginForm button:hover {
+            background-color: #0056b3;
+        }
+        .login-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            font-size: 16px;
+        }  
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="Index.html">Journal</a></li>
+            <li><a href="Sub.html">Affirmative</a></li>
+            <li><a href="About.html">About</a></li>
+            <li><a href="Contact.html">Contact</a></li>
+            <li><a href="History.html">History</a></li>
+            <li><button class="login-btn" onclick="openLoginModal()">Login</button></li>
+        </ul>
+    </nav>
+
+    <header>
+    <div class="mountain-container">
+        <div class="mountain"></div>
+    </div> 
+    </header>
+
+    <main>
+        <div id="codePrompt"></div>
+        <div id="userResponse">
+            <label for="response">Your Response:</label>
+            <textarea id="response" rows="6" cols="50"></textarea>
+            <button onclick="submitResponse()">Submit</button>
+        </div>
+        <script>
+            function generateCodePrompt() {
+                const prompts = [
+                    "Write about your favorite childhood memory.",
+                    "Describe a recent challenge you faced and how you overcame it.",
+                    "Reflect on a time when you felt proud of yourself.",
+                    "Write about something you learned recently.",
+                    "Describe a person who has influenced you in a positive way.",
+                    "Write about your goals for the future.",
+                    "Reflect on a moment that made you smile today.",
+                    "Describe a place you would love to visit and why.",
+                    "Think back to a time you faced a challenge. What did you learn from that experience, and how did it help you grow?",
+                    "List three things you're grateful for in your life right now. Why are these things important to you?",
+                    "Describe a time when something unexpected happened. Did it turn out positive or negative? How did you react?",
+                    "Reflect on a recent interaction with someone close to you. What did you appreciate about the exchange?",
+                    "Recall a situation where you tried something new or stepped outside your comfort zone. Did it feel scary? What was the outcome?",
+                    "Think about a mistake you made recently. What did you learn from it, and how can you avoid making the same mistake again?",
+                    "Imagine yourself one year from now. What do you hope to achieve? What steps can you take now to get there?",
+                    "What are you naturally good at? How can you use your strengths to benefit yourself or others this week?",
+                    "Is there something you've been holding onto (an emotion, a grudge, a situation)? Consider how letting go could bring you peace.",
+                    "Reflect on a recent experience that sparked your creativity. How can you tap into this inspiration in the future?",
+
+                ];
+                const randomIndex = Math.floor(Math.random() * prompts.length);
+                const prompt = prompts[randomIndex];
+
+                const codePromptElement = document.getElementById('codePrompt');
+                codePromptElement.innerText = prompt;
+            }
+
+            function submitResponse() {
+                const responseTextArea = document.getElementById('response');
+                const response = responseTextArea.value.trim();
+
+                if (response !== "") {
+                    localStorage.setItem('response', response);
+                    window.location.href = 'History.html';
+                } else {
+                    alert("Please enter a valid response.");
+                }
+            }
+            generateCodePrompt();
+        </script>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="contact-info">
+                <h3>Contact Us</h3>
+                <p>#278H, Street 201R, Kroalkor Village, Sangkat Kilometer 6, Khan Russey Keo, Phnom Penh, Cambodia</p>
+                <p>Phone: (855) xxx xxx xxx</p>
+                <p>Email: xxxxxxx@aupp.edu.kh</p>
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                <a href="https://www.facebook.com/AUPPkh/">Facebook</a>
+                <a href="https://twitter.com/Aupp_kh">Twitter</a>
+                <a href="https://www.instagram.com/aupp.edu.kh/?hl=en">Instagram</a>
+                </div>  
+            </div>
+        </div>
+        <div class="copyright">
+            <p>© 2024 ZF Company. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLoginModal()">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password">
+                <button type="button" id="loginButton" onclick="login()">Login</button>
+            </form>
+        </div>
+    </div>
+    
+        <script>
+        function openLoginModal() {
+            document.getElementById("loginModal").style.display = "block";
+        }
+
+        function closeLoginModal() {
+            document.getElementById("loginModal").style.display = "none";
+        }
+
+        function login() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            if (username.trim() === "" || password.trim() === "") {
+                alert("Please enter both username and password.");
+            } else {
+                console.log("Username: " + username);
+                console.log("Password: " + password);
+                closeModalOnLogin(); 
+            }
+        }
+
+        function closeModalOnLogin() {
+            closeLoginModal();
+        }
+    </script>  
+</body>
+</html>
+
+
