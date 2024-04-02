@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scribble It</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        nav {
+            background-color: #333;
+            padding: 20px 50px;
+            text-align: right;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 999;
+        }
+        nav ul {
+            list-style-type: none; 
+            margin: 0;
+            padding: 0; 
+        }
+        nav ul li {
+            display: inline-block; 
+            margin-right: 20px; 
+        }
+        nav ul li a {
+            text-decoration: none; 
+            color: #fff; 
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #responses {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            min-height: 100px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5); 
+            overflow: auto; 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%; 
+            border-radius: 5px;
+            position: relative;
+        }
+        .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        color: #888;
+        cursor: pointer;
+    }
+    #loginForm {
+        margin-top: 20px;
+    }
+
+    #loginForm label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    #loginForm input[type="text"],
+    #loginForm input[type="password"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin-bottom: 10px;
+    }
+
+    #loginForm button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    #loginForm button:hover {
+        background-color: #0056b3;
+    }
+    .login-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    }  
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="Main.html">Journal</a></li>
+            <li><a href="Sub.html">Affirmative</a></li>
+            <li><a href="About.html">About</a></li>
+            <li><a href="Contact.html">Contact</a></li>
+            <li><a href="History.html">History</a></li>
+            <li><button class="login-btn" onclick="openLoginModal()">Login</button></li>
+        </ul>
+    </nav>
+<main>
+    <div class="container">
+        <h1>User Responses</h1>
+        <div id="responses"></div>
+        <a href="Main.html">Back to Main</a> 
+    </div>
+    <script>
+        const response = localStorage.getItem('response');
+
+        const responsesDiv = document.getElementById('responses');
+        if (response) {
+            responsesDiv.innerText = response;
+        } else {
+            responsesDiv.innerText = "No responses yet.";
+        }
+    </script>
+</main>
+</body>
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeLoginModal()">&times;</span>
+        <h2>Login</h2>
+        <form id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password">
+            <button type="button" id="loginButton" onclick="login()">Login</button>
+        </form>
+    </div>
+</div>
+
+    <script>
+    function openLoginModal() {
+        document.getElementById("loginModal").style.display = "block";
+    }
+
+    function closeLoginModal() {
+        document.getElementById("loginModal").style.display = "none";
+    }
+
+    function login() {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+
+        if (username.trim() === "" || password.trim() === "") {
+            alert("Please enter both username and password.");
+        } else {
+            console.log("Username: " + username);
+            console.log("Password: " + password);
+            closeModalOnLogin(); 
+        }
+    }
+
+    function closeModalOnLogin() {
+        closeLoginModal();
+    }
+</script>  
+</html>
+
+
